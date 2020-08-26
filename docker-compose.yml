@@ -10,3 +10,13 @@ services:
     volumes:
       -  /usr/src/app/node_modules
       - ./safespace-frontend:/usr/src/app
+  safespace-backend:
+    tty: true
+    container_name: safespace-backend
+    build:
+      context: ./safespace-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      -  /usr/src/app/node_modules
+      - ./safespace-backend:/usr/src/app
