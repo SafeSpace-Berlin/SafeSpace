@@ -1,3 +1,4 @@
+require("dotenv").config();
 var http = require("http"),
   path = require("path"),
   methods = require("methods"),
@@ -8,33 +9,27 @@ var http = require("http"),
   passport = require("passport"),
   errorhandler = require("errorhandler"),
   mongoose = require("mongoose");
+  
 // Create global app object
 var app = express();
 
 app.use(cors());
 
-app.use(require("./routes"));
-
-/* app.use(require("./routes"));
-
-/// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  var err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Succesfully connected to the database");
 });
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
-  res.json({
-    errors: {
-      message: err.message,
-      error: {},
-    },
-  });
-}); */
+require("./models/Room");
+
+app.use(require("./routes"));
 
 var server = app.listen(process.env.PORT || 5000, function () {
   console.log("Listening on port " + server.address().port);
