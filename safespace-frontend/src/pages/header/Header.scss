@@ -1,6 +1,14 @@
+@import './../../index.scss';
+
 #header {
+  position: fixed;
+  top: 0;
   background: pink;
+  height: $header-height;
+  width: 100%;
+  z-index: 2;
   h1 {
     color: green;
+    margin: 0;
   }
 }
