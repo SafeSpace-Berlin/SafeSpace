@@ -1,16 +1,14 @@
-@import './../../index.scss';
+@import "./../../index.scss";
 
 .home {
   position: relative;
   top: $header-height;
   &__section {
-
     &--welcome {
       height: calc(100vh - #{$header-height});
-      background: url('./../../assets/background.jpg');
+      background: url("./../../assets/background.jpg");
       background-position: center;
       background-size: cover;
-
     }
     &--description {
       display: flex;
@@ -48,6 +46,23 @@
           font-size: 2rem;
           color: $color-white;
         }
+      }
+    }
+    &--footer {
+      height: 32vh;
+      background-color: $color-white;
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 3rem;
+        margin-left: 3rem;
+        &__title {
+          font-size: 2rem;
+          color: $color-black;
+        }
+        color: $color-brown;
       }
     }
   }

@@ -25,6 +25,14 @@ export default class Home extends Component {
                     </div>
                   </div>
                 </div>
+                <div className="home__section home__section--footer">
+                  <div className="content">
+                    <div className="content__title">
+                      SafeSpace
+                    </div>
+                    <p>safespaceberlin@gmail.com</p>
+                  </div>
+                </div>
             </div>
         )
     }
