@@ -7,7 +7,9 @@
 
     &--welcome {
       height: calc(100vh - #{$header-height});
-      background-color: $color-black;
+      background: url('./../../assets/background.jpg');
+      background-position: center;
+      background-size: cover;
 
     }
     &--description {

@@ -1,6 +1,2 @@
-export const title = 'Lorem ipsum dolor sit amet'
-export const content = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+export const title = 'What is SafeSpace?'
+export const content = `SafeSpace is a platform where non-heteronormative, non-binary, transgender and queer people who found themselves in jeopardy due to their sexual identity have the chance to find accommodation in Berlin. Bearing in mind how difficult this process is, LGBTQ+ (friendly) hosts can make this obstacle easier to overcome by offering their safe spaces (rooms/entire apartments) to those who need them most.`
