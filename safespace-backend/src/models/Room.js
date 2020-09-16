@@ -1,15 +1,23 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
-var RoomSchema = new mongoose.Schema({
-  roomId: String,
-}, {timestamps: true});
+var RoomSchema = new mongoose.Schema(
+  {
+    availableFrom: Date,
+    availableTo: Date,
+    price: String,
+    country: String,
+    city: String,
+    district: String,
+    photo: String,
+    contact: String,
+  },
+  { timestamps: true }
+);
 
-// Requires population of author
-RoomSchema.methods.toJSONFor = function(user){
-  return {
-    id: this._id,
-    roomId: this.roomId,
-  };
+RoomSchema.methods.toJSON = function () {
+  const { ...object } = this.toObject();
+  object.id = this._id;
+  return object;
 };
 
-mongoose.model('Room', RoomSchema);
+mongoose.model("Room", RoomSchema);
