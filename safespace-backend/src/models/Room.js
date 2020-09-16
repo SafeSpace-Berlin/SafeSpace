@@ -2,14 +2,14 @@ var mongoose = require('mongoose');
 
 var RoomSchema = new mongoose.Schema({
   roomId: String,
+  availableFrom: Date,
+  availableTo: Date,
+  price: String,
+  country: String,
+  city: String,
+  district: String,
+  photo: String,
+  contact: String
 }, {timestamps: true});
-
-// Requires population of author
-RoomSchema.methods.toJSONFor = function(user){
-  return {
-    id: this._id,
-    roomId: this.roomId,
-  };
-};
 
 mongoose.model('Room', RoomSchema);
