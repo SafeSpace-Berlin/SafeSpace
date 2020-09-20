@@ -1,6 +1,30 @@
 #mission {
   /* remove below styling */
-  padding-top: 100px;
-  height: 100vh;
-  background: grey;
+  background: white;
+  padding-top: 5%;
+  margin: 5%;
+}
+
+.column {
+  float: left;
+}
+.left{
+  flex: 40%
+}
+
+.right{
+  flex: 60%;
+}
+
+.row{
+  display: flex;
+}
+
+p{
+  margin-bottom: 5%;
+  line-height: 1.4;
+}
+
+h1{
+  font-size: 3em;
 }
