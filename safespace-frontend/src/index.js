@@ -4,13 +4,18 @@ import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 import { createBrowserHistory } from 'history';
-import { Router, Route, Switch } from "react-router";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 import Header from './pages/header/Header';
 import Home from './pages/home/Home';
 import Mission from './pages/mission/Mission';
 import OfferRoom from './pages/offerRoom/OfferRoom';
 import People from './pages/people/People';
+import Room from './pages/room/Room';
 import Rooms from './pages/rooms/Rooms';
 import SeekRoom from './pages/seekRoom/SeekRoom';
 import Team from './pages/team/Team';
@@ -25,6 +30,7 @@ ReactDOM.render(
         <Route path="/mission" component={Mission} />
         <Route path="/offerRoom" component={OfferRoom} />
         <Route path="/people" component={People} />
+        <Route path="/rooms/:id" component={Room} />
         <Route path="/rooms" component={Rooms} />
         <Route path="/seekRoom" component={SeekRoom} />
         <Route path="/team" component={Team} />
