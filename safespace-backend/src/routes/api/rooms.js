@@ -8,16 +8,10 @@ router.get("/", (req, res) => {
   });
 });
 
-//todo: check if the GET rooms/:id works
 router.get("/:id", (req, res) => {
   Room.findById(req.params.id).then((room) => {
     if (!room) {
-      return (
-        res
-          //todo: not found status code
-          .status(422)
-          .json({ error: "Room not found" })
-      );
+      return res.status(404).json({ error: "Room not found" });
     } else {
       return res.status(200).json({ room: room });
     }
@@ -73,7 +67,7 @@ router.post("/", function (req, res, next) {
   room
     .save()
     .then(function () {
-      return res.json({ room: room.toJSON() });
+      return res.status(200).json({ room: room.toJSON() });
     })
     .catch(next);
 });

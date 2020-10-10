@@ -33,6 +33,7 @@ db.once("open", function () {
 });
 
 require("./models/Room");
+require("./models/User");
 
 app.use(require("./routes"));
 
