@@ -14,6 +14,7 @@ import Header from './pages/header/Header';
 import Home from './pages/home/Home';
 import Mission from './pages/mission/Mission';
 import OfferRoom from './pages/offerRoom/OfferRoom';
+import Person from './pages/person/Person';
 import People from './pages/people/People';
 import Room from './pages/room/Room';
 import Rooms from './pages/rooms/Rooms';
@@ -29,6 +30,7 @@ ReactDOM.render(
         <Route path="/" exact component={Home} />
         <Route path="/mission" component={Mission} />
         <Route path="/offerRoom" component={OfferRoom} />
+        <Route path="/people/:id" component={Person} />
         <Route path="/people" component={People} />
         <Route path="/rooms/:id" component={Room} />
         <Route path="/rooms" component={Rooms} />
