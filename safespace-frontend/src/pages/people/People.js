@@ -34,6 +34,7 @@ export default class People extends Component {
             <div className="field" key={r._id}>
               <img src={r.photo} alt=""></img>
               <h2>name: {r.name}</h2>
+              <h2>id: {r.id}</h2>
               <h2>budget: {r.budget}</h2>
               <h2>story: {r.story}</h2>
               <h2>searches for a room: {r.searching.toString()}</h2>
