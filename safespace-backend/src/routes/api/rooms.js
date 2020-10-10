@@ -8,16 +8,10 @@ router.get("/", (req, res) => {
   });
 });
 
-//todo: check if the GET rooms/:id works
 router.get("/:id", (req, res) => {
-  Room.findById(req.payload.id).then((room) => {
+  Room.findById(req.params.id).then((room) => {
     if (!room) {
-      return (
-        res
-          //todo: not found status code
-          .status(422)
-          .json({ error: "Room not found" })
-      );
+      return res.status(404).json({ error: "Room not found" });
     } else {
       return res.status(200).json({ room: room });
     }
@@ -25,8 +19,6 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", function (req, res, next) {
-  var room = new Room();
-
   //Validation
   let fromDate = Date.parse(req.body.room.availableFrom);
   let toDate = Date.parse(req.body.room.availableTo);
@@ -37,7 +29,7 @@ router.post("/", function (req, res, next) {
       .status(422)
       .json({ error: "availableFrom or availableTo are not dates" });
   }
-  
+
   // check if available from not in the past
   if (fromDate < Date.now()) {
     return res
@@ -52,7 +44,7 @@ router.post("/", function (req, res, next) {
       .json({ error: "availableFrom should be before availableTo" });
   }
 
-  //check if all required fields provided 
+  //check if all required fields provided
   Room.schema.requiredPaths().forEach((path) => {
     console.log(path);
     if (!req.body.room[path]) {
@@ -60,13 +52,22 @@ router.post("/", function (req, res, next) {
         .status(422)
         .json({ error: "Some of the required fields are missing" });
     }
-    room[path] = req.body.room[path];
   });
 
-    room
+  var room = new Room();
+  room.availableFrom = req.body.room.availableFrom;
+  room.availableTo = req.body.room.availableTo;
+  room.price = req.body.room.price;
+  room.country = req.body.room.country;
+  room.city = req.body.room.city;
+  room.district = req.body.room.district;
+  room.contact = req.body.room.contact;
+  room.photo = req.body.room.photo || null;
+
+  room
     .save()
     .then(function () {
-      return res.json({ room: room.toJSON() });
+      return res.status(200).json({ room: room.toJSON() });
     })
     .catch(next);
 });
