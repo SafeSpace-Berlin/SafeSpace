@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./Room.scss";
-import { useParams } from "react-router-dom";
+
 var config = require("../../config");
 
 export default class Room extends Component {
