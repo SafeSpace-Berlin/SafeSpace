@@ -5,10 +5,11 @@ export const data = {
     },
     formLabels: {
         city: 'city',
-        rent: 'rent',
+        price: 'price',
         district: 'district',
+        country: 'country',
         description: 'description',
-        email: 'email',
+        contact: 'contact',
         submit: 'submit',
         uploadPhoto: 'upload photo',
         availableFrom: 'from',

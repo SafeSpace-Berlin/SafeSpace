@@ -4,19 +4,22 @@ import { data } from './data';
 import './OfferRoom.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default class OfferRoom extends React.Component {
+let config = require("../../config");
+
+export default class roomRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      offer: {
+      room: {
         availableFrom: '',
         availableTo: '',
+        country: '',
         city: '',
-        rent: '',
+        price: '',
         district: '',
         description: '',
-        email: '',
-        files: [],
+        contact: '',
+        photo: null,
       }
     };
 
@@ -24,14 +27,14 @@ export default class OfferRoom extends React.Component {
     this.handleFileInputChange = this.handleFileInputChange.bind(this);
     this.handleDatePickerSelect = this.handleDatePickerSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addFile = this.addFile.bind(this);
+    this.addPhoto = this.addPhoto.bind(this);
   }
 
   handleTextInputChange(event, attribute) {
     this.setState({
       ...this.state,
-      offer: {
-        ...this.state.offer,
+      room: {
+        ...this.state.room,
         [attribute]: event.target.value,
       }
     });
@@ -43,19 +46,19 @@ export default class OfferRoom extends React.Component {
     }
     this.setState({
       ...this.state,
-      offer: {
-        ...this.state.offer,
+      room: {
+        ...this.state.room,
         [attribute]: date,
       },
     });
   }
 
-  addFile(file) {
+  addPhoto(file) {
     this.setState({
       ...this.state,
-      offer: {
-        ...this.state.offer,
-        files: [...this.state.offer.files, file],
+      room: {
+        ...this.state.room,
+        photo: file,
       }
     });
   }
@@ -64,9 +67,9 @@ export default class OfferRoom extends React.Component {
     const files = event.target.files
     if (FileReader && files && files.length) {
       const fr = new FileReader()
-      const addFile = this.addFile
+      const addPhoto = this.addPhoto
       fr.onload = function (event) {
-        addFile(event.target.result)
+        addPhoto(event.target.result)
       }
       fr.readAsDataURL(files[0])
     }
@@ -74,9 +77,18 @@ export default class OfferRoom extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const offerData = this.state.offer
-    console.log(offerData)
-    // TODO: send the data to BE to add an offer
+    const roomData = this.state.room
+    console.log(roomData)
+    fetch(config.url + "rooms", {
+      method: "post",
+      body: { room: this.state.room },
+    })
+      .then((result) => {
+        // success toast
+      })
+      .catch((error) => {
+        // error toast
+      });
   }
 
   render() {
@@ -98,12 +110,32 @@ export default class OfferRoom extends React.Component {
               <input type="file" accept="image/*" id="input-file" className="input input--file" onChange={ this.handleFileInputChange } />
             </label>
             <div className="gallery">
-              {
-                this.state.offer.files.map( file => (
-                  <img src={file} className="form_img" key={file} alt="" />
-                ))
-              }
+              <img
+                src={ this.state.room.photo }
+                className="form_img"
+                alt=""
+              />
             </div>
+          </div>
+          <div className="form__row">
+            <label htmlFor="input-country">
+              { data.formLabels.country  }
+            </label>
+            <input
+              id="input-country"
+              className="input input--text"
+              onChange={ event => this.handleTextInputChange(event, 'country') }
+            />
+          </div>
+          <div className="form__row">
+            <label htmlFor="input-district">
+              { data.formLabels.district  }
+            </label>
+            <input
+              id="input-district"
+              className="input input--text"
+              onChange={ event => this.handleTextInputChange(event, 'district') }
+            />
           </div>
           <div className="form__row">
             <label htmlFor="input-city">
@@ -116,23 +148,13 @@ export default class OfferRoom extends React.Component {
             />
           </div>
           <div className="form__row">
-            <label htmlFor="input-rent">
-              { data.formLabels.rent }
+            <label htmlFor="input-price">
+              { data.formLabels.price }
             </label>
             <input
-              id="input-rent"
+              id="input-price"
               className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'rent') }
-            />
-          </div>
-          <div className="form__row">
-            <label htmlFor="input-district">
-              { data.formLabels.district  }
-            </label>
-            <input
-              id="input-district"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'district') }
+              onChange={ event => this.handleTextInputChange(event, 'price') }
             />
           </div>
           <div className="form__row">
@@ -154,7 +176,7 @@ export default class OfferRoom extends React.Component {
                 id="input-available-from"
                 className="input"
                 dateFormat="yyyy-MM-dd"
-                selected={this.state.offer.availableFrom}
+                selected={this.state.room.availableFrom}
                 onChange={ date => this.handleDatePickerSelect(date, 'availableFrom') }
               />
             </div>
@@ -166,19 +188,19 @@ export default class OfferRoom extends React.Component {
                 id="input-available-to"
                 className="input"
                 dateFormat="yyyy-MM-dd"
-                selected={this.state.offer.availableTo}
+                selected={this.state.room.availableTo}
                 onChange={ date => this.handleDatePickerSelect(date, 'availableTo') }
               />
             </div>
           </div>
           <div className="form__row">
-            <label htmlFor="input-email">
-              { data.formLabels.email  }
+            <label htmlFor="input-contact">
+              { data.formLabels.contact  }
             </label>
             <input
-              id="input-email"
+              id="input-contact"
               className="input input--text"
-              onChange={ (event) => this.handleTextInputChange(event, 'email') }
+              onChange={ (event) => this.handleTextInputChange(event, 'contact') }
             />
           </div>
           <div className="form__row">
