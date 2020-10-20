@@ -10,6 +10,9 @@ import {
   Route
 } from "react-router-dom";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Header from './pages/header/Header';
 import Home from './pages/home/Home';
 import Mission from './pages/mission/Mission';
@@ -37,6 +40,16 @@ ReactDOM.render(
         <Route path="/seekRoom" component={SeekRoom} />
         <Route path="/team" component={Team} />
     </Switch>
+    <ToastContainer
+      position="bottom-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
   </Router>,
   document.getElementById('root')
 );
