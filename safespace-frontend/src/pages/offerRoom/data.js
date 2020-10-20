@@ -11,5 +11,7 @@ export const data = {
         email: 'email',
         submit: 'submit',
         uploadPhoto: 'upload photo',
+        availableFrom: 'from',
+        availableTo: 'to',
     },
 }
