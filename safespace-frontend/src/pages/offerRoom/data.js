@@ -11,8 +11,13 @@ export const data = {
         description: 'description',
         contact: 'contact',
         submit: 'submit',
+        photo: 'photo',
         uploadPhoto: 'upload photo',
         availableFrom: 'from',
         availableTo: 'to',
+    },
+    messages: {
+        createSuccess: 'Room offered was successfully added.',
+        validationError: 'Following fields are invalid: ',
     },
 }

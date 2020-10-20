@@ -1,15 +1,17 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { data } from './data';
+import { toast } from 'react-toastify';
 import './OfferRoom.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
 let config = require("../../config");
 
-export default class roomRoom extends React.Component {
+export default class offerRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isValidated: false,
       room: {
         availableFrom: '',
         availableTo: '',
@@ -23,72 +25,121 @@ export default class roomRoom extends React.Component {
       }
     };
 
+    // Setters
+
+    this.setIsValidated = this.setIsValidated.bind(this);
+    this.setRoomAttribute = this.setRoomAttribute.bind(this);
+
+    // Event handlers
+
     this.handleTextInputChange = this.handleTextInputChange.bind(this);
     this.handleFileInputChange = this.handleFileInputChange.bind(this);
-    this.handleDatePickerSelect = this.handleDatePickerSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addPhoto = this.addPhoto.bind(this);
+
+    // Validation
+
+    this.isAttributeInvalid = this.isAttributeInvalid.bind(this);
+    this.isAvailableFromInvalid = this.isAvailableFromInvalid.bind(this);
+    this.isAvailableToInvalid = this.isAvailableToInvalid.bind(this);
+    this.getInvalidInputClass = this.getInvalidInputClass.bind(this)
   }
 
-  handleTextInputChange(event, attribute) {
-    this.setState({
-      ...this.state,
+  // Setters
+
+  async setIsValidated(value) {
+    await this.setState({ isValidated: value })
+  }
+  async setRoomAttribute(attribute, value) {
+    await this.setState({
       room: {
         ...this.state.room,
-        [attribute]: event.target.value,
+        [attribute]: value,
       }
     });
   }
 
-  handleDatePickerSelect(date, attribute) {
-    if (!['availableFrom', 'availableTo'].includes(attribute)) {
-      return
-    }
-    this.setState({
-      ...this.state,
-      room: {
-        ...this.state.room,
-        [attribute]: date,
-      },
-    });
-  }
+  // Event handlers
 
-  addPhoto(file) {
-    this.setState({
-      ...this.state,
-      room: {
-        ...this.state.room,
-        photo: file,
-      }
-    });
+  handleTextInputChange(attribute, value) {
+    this.setRoomAttribute(attribute, value)
   }
-
   handleFileInputChange(event) {
     const files = event.target.files
     if (FileReader && files && files.length) {
       const fr = new FileReader()
-      const addPhoto = this.addPhoto
+      const setRoomAttribute = this.setRoomAttribute
       fr.onload = function (event) {
-        addPhoto(event.target.result)
+        setRoomAttribute(event.target.result)
       }
       fr.readAsDataURL(files[0])
     }
   }
-
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    const roomData = this.state.room
-    console.log(roomData)
-    fetch(config.url + "rooms", {
-      method: "post",
-      body: { room: this.state.room },
-    })
-      .then((result) => {
-        // success toast
+    const roomData = { ...this.state.room };
+    await this.setIsValidated(true);
+    const invalidAttributes = []
+    for (let attr in roomData) {
+      if (roomData.hasOwnProperty(attr) && this.isAttributeInvalid(attr)) {
+        invalidAttributes.push(attr)
+      }
+    }
+    if (invalidAttributes.length) {
+      const invalidFields = invalidAttributes
+        .map(attr => data.formLabels[attr])
+        .join(', ');
+      toast.error(
+        `${data.messages.validationError}
+        ${invalidFields}`
+      );
+    } else {
+      fetch(config.url + "rooms", {
+        method: "post",
+        body: { room: roomData },
       })
-      .catch((error) => {
-        // error toast
-      });
+        .then((result) => {
+          if (result.ok) {
+            toast.success(data.messages.createSuccess);
+          } else {
+            toast.error(`${result.status}: ${result.statusText}`);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    }
+  }
+
+  // Validation
+
+  isAvailableFromInvalid() {
+    if (!this.state.room['availableFrom']) return true;
+    const today = new Date();
+    const availableFromObj = new Date(this.state.room.availableFrom);
+    return today > availableFromObj;
+  }
+  isAvailableToInvalid() {
+    if (!this.state.room['availableTo']) return true;
+    const today = new Date();
+    const availableFromObj = new Date(this.state.room.availableFrom);
+    const availableToObj = new Date(this.state.room.availableTo);
+    return (today > availableToObj) || (availableToObj < availableFromObj);
+  }
+  isAttributeInvalid(attribute) {
+    const isAttributeEmpty = !this.state.room[attribute];
+    const isValidated = this.state.isValidated;
+    if (attribute === 'availableFrom') {
+      return isValidated && this.isAvailableFromInvalid();
+    } else if (attribute === 'availableTo') {
+      return isValidated && this.isAvailableToInvalid();
+    } else if (attribute === 'photo') {
+      return false;
+    } else {
+      return isValidated && isAttributeEmpty;
+    }
+  }
+  getInvalidInputClass(attribute) {
+    return this.isAttributeInvalid(attribute) ? 'input--invalid' : '';
   }
 
   render() {
@@ -123,8 +174,8 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-country"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'country') }
+              className={ `input ${this.getInvalidInputClass('country')}` }
+              onChange={ event => this.handleTextInputChange('country', event.target.value) }
             />
           </div>
           <div className="form__row">
@@ -133,8 +184,8 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-district"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'district') }
+              className={ `input ${this.getInvalidInputClass('district')}` }
+              onChange={ event => this.handleTextInputChange('district', event.target.value) }
             />
           </div>
           <div className="form__row">
@@ -143,8 +194,8 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-city"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'city') }
+              className={ `input ${this.getInvalidInputClass('city')}` }
+              onChange={ event => this.handleTextInputChange('city', event.target.value) }
             />
           </div>
           <div className="form__row">
@@ -153,8 +204,8 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-price"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'price') }
+              className={ `input ${this.getInvalidInputClass('price')}` }
+              onChange={ event => this.handleTextInputChange('price', event.target.value) }
             />
           </div>
           <div className="form__row">
@@ -163,8 +214,8 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-description"
-              className="input input--text"
-              onChange={ event => this.handleTextInputChange(event, 'description') }
+              className={ `input ${this.getInvalidInputClass('description')}` }
+              onChange={ event => this.handleTextInputChange('description', event.target.value) }
             />
           </div>
           <div className="form__row form__row--horizontal">
@@ -174,10 +225,10 @@ export default class roomRoom extends React.Component {
               </label>
               <DatePicker
                 id="input-available-from"
-                className="input"
+                className={ `input ${this.getInvalidInputClass('availableFrom')}` }
                 dateFormat="yyyy-MM-dd"
                 selected={this.state.room.availableFrom}
-                onChange={ date => this.handleDatePickerSelect(date, 'availableFrom') }
+                onChange={ date => this.handleTextInputChange('availableFrom', date) }
               />
             </div>
             <div className="form__row">
@@ -186,10 +237,10 @@ export default class roomRoom extends React.Component {
               </label>
               <DatePicker
                 id="input-available-to"
-                className="input"
+                className={ `input ${this.getInvalidInputClass('availableTo')}` }
                 dateFormat="yyyy-MM-dd"
                 selected={this.state.room.availableTo}
-                onChange={ date => this.handleDatePickerSelect(date, 'availableTo') }
+                onChange={ date => this.handleTextInputChange('availableTo', date) }
               />
             </div>
           </div>
@@ -199,12 +250,15 @@ export default class roomRoom extends React.Component {
             </label>
             <input
               id="input-contact"
-              className="input input--text"
-              onChange={ (event) => this.handleTextInputChange(event, 'contact') }
+              className={ `input ${this.getInvalidInputClass('contact')}` }
+              onChange={ (event) => this.handleTextInputChange('contact', event.target.value) }
             />
           </div>
           <div className="form__row">
-            <button className="form__submit-button" onClick={ this.handleSubmit }>
+            <button
+              className="form__submit-button"
+              onClick={ this.handleSubmit }
+            >
               { data.formLabels.submit }
             </button>
           </div>

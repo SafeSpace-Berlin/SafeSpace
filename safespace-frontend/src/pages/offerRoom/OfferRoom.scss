@@ -45,6 +45,9 @@
         border-radius: 2px;
         background: $color-gray--light;
         outline: none;
+        &--invalid {
+          border: 1px solid $color-danger;
+        }
         &--file {
           cursor: inherit;
           display: block;
